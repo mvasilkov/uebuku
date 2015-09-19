@@ -15,12 +15,16 @@ function addUrl(event) {
     var url = $newUrl.val()
     $newUrl.val('')
 
+    var $urlAction = $('#url-action')
+    var action = $urlAction.val()
+    // $urlAction.val('scan')
+
     if (validateUrl(url)) {
         console.error('Bad URL:', url)
         return
     }
 
-    ipc.send('new-url', url, 'save')
+    ipc.send('new-url', url, action)
 }
 
 /**

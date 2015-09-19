@@ -4,6 +4,7 @@ var _request = require('request')
 
 var backend = require('./backend.js')
 var save = require('./save.js')
+var scan = require('./scan.js')
 var util = require('./util.js')
 
 var headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) ' +
@@ -14,6 +15,11 @@ var request = _request.defaults({
     encoding: null,
     headers: headers,
 })
+
+var handlers = {
+    save: save,
+    scan: scan,
+}
 
 var Loader = module.exports = function (dir, webContents) {
     this.dir = _path.join(dir, 'Uebuku')
@@ -26,7 +32,14 @@ var Loader = module.exports = function (dir, webContents) {
 }
 
 Loader.prototype.work = function () {
+    if (this.working) {
+        return
+    }
+    this.working = true
+
     backend.getOne(function (err, doc) {
+        this.working = false
+
         if (err) {
             console.error(err)
             return
@@ -41,8 +54,13 @@ Loader.prototype.work = function () {
         this.doc = doc
         this.working = true
         this.webContents.send('begin-work', doc._id)
-        request(doc.url, save.handler({dir: this.dir, doc: doc},
-                                      this.resolve, this.reject))
+
+        assert(doc.action in handlers)
+
+        var handler = handlers[doc.action]
+        .handler({dir: this.dir, doc: doc}, this.resolve, this.reject)
+
+        request(doc.url, handler)
     }.bind(this))
 }
 
