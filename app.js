@@ -1,11 +1,14 @@
 var app = require('app')
 var BrowserWindow = require('browser-window')
 var ipc = require('ipc')
-var util = require('util')
+var _util = require('util')
 
-var backend = require('./backend.js')
+var backend = require('./app/backend.js')
+var Loader = require('./app/loader.js')
+var util = require('./app/util.js')
 
 var win
+var slave
 
 function init() {
     if (win)
@@ -13,20 +16,21 @@ function init() {
 
     win = new BrowserWindow({width: 960, height: 540})
 
-    win.loadUrl(util.format('file://%s/ui/index.html', __dirname))
+    win.loadUrl(_util.format('file://%s/ui/index.html', __dirname))
     win.openDevTools()
 
     win.on('closed', function () {
         win = null
     })
+
+    slave = new Loader(app.getPath('home'), win.webContents)
 }
 
 app.on('ready', function () {
     backend.init(app.getPath('userData'), function (err) {
         if (err) {
             console.error(err)
-            app.quit()
-            return
+            return void app.quit()
         }
 
         init()
@@ -44,27 +48,17 @@ app.on('window-all-closed', function () {
 })
 
 ipc.on('want-backend-state', function (event) {
-    loadAll(event)
+    util.sendState(event.sender)
+    slave.work()
 })
 
 ipc.on('new-url', function (event, url, action) {
-    backend.save(url, action, function (err) {
+    backend.put({url: url, action: action}, function (err) {
         if (err) {
             console.error(err)
             return
         }
 
-        loadAll(event)
+        util.sendState(event.sender)
     })
 })
-
-function loadAll(event) {
-    backend.loadAll(function (err, res) {
-        if (err) {
-            console.error(err)
-            return
-        }
-
-        event.sender.send('backend-state', res)
-    })
-}

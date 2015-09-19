@@ -5,3 +5,7 @@ section[id$=-template] {
 input[type=url]:invalid {
     color: #FF0355
 }
+
+li.working {
+    background: #C3FD44
+}

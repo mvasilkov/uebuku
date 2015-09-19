@@ -5,7 +5,6 @@ var ipc = require('ipc')
 var template = handlebars.compile($('#backend-state-template').html())
 
 function paint(res) {
-    console.log(res)
     $('#backend-state').html(template({res: res}))
 }
 
@@ -34,10 +33,16 @@ function validateUrl(u) {
     return false
 }
 
+function beginWork(docid) {
+    $('li[data-docid=' + docid + ']').addClass('working')
+}
+
 function init() {
     $('#add-url-form').submit(addUrl)
 
     ipc.on('backend-state', paint)
+    ipc.on('begin-work', beginWork)
+
     ipc.send('want-backend-state')
 }
 

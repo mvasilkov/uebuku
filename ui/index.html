@@ -3,7 +3,7 @@
     <head>
         <meta charset=utf8>
         <title>Uebuku</title>
-        <link rel=stylesheet href=./basic.css>
+        <link rel=stylesheet href=./app.css>
     </head>
     <body>
         <div id=add-url>
@@ -19,7 +19,7 @@
         <section id=backend-state-template>
             <ul>
                 {{#each res.rows}}
-                <li>
+                <li data-docid={{this.doc._id}}>
                     <span class=action>{{this.doc.action}}</span>
                     <span class=url>{{this.doc.url}}</span>
                 </li>

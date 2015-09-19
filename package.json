@@ -20,8 +20,10 @@
   "dependencies": {
     "handlebars": "^4.0.2",
     "jquery": "^2.1.4",
+    "mime-types": "^2.1.6",
     "mkdirp": "^0.5.1",
     "objectid-js": "^1.0.2-patch1",
-    "pouchdb": "^4.0.3"
+    "pouchdb": "^4.0.3",
+    "request": "^2.62.0"
   }
 }
