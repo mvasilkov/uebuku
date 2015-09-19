@@ -8,6 +8,7 @@ var util = require('./util.js')
 
 var headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) ' +
     'AppleWebKit/600.7.12 (KHTML, like Gecko) Version/7.1.7 Safari/537.85.16'}
+var pause = 250
 
 var request = _request.defaults({
     encoding: null,
@@ -18,6 +19,7 @@ var Loader = module.exports = function (dir, webContents) {
     this.dir = _path.join(dir, 'Uebuku')
     this.doc = null
     this.webContents = webContents
+    this.working = false
 
     this.resolve = resolve.bind(this)
     this.reject = reject.bind(this)
@@ -37,6 +39,7 @@ Loader.prototype.work = function () {
         assert.strictEqual(this.doc, null)
 
         this.doc = doc
+        this.working = true
         this.webContents.send('begin-work', doc._id)
         request(doc.url, save.handler({dir: this.dir, doc: doc},
                                       this.resolve, this.reject))
@@ -50,6 +53,15 @@ function resolve() {
         }
 
         this.doc = null
+        this.working = false
+        this.webContents.send('begin-sleep')
+
+        setTimeout(function () {
+            if (!this.working) {
+                this.work()
+            }
+        }.bind(this), pause)
+
         util.sendState(this.webContents)
     }.bind(this))
 }

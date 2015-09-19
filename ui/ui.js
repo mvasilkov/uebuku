@@ -35,6 +35,14 @@ function validateUrl(u) {
 
 function beginWork(docid) {
     $('li[data-docid=' + docid + ']').addClass('working')
+
+    $('#working-indicator').removeClass('sleeping').addClass('working')
+    .text('working')
+}
+
+function beginSleep() {
+    $('#working-indicator').removeClass('working').addClass('sleeping')
+    .text('sleeping')
 }
 
 function init() {
@@ -42,6 +50,7 @@ function init() {
 
     ipc.on('backend-state', paint)
     ipc.on('begin-work', beginWork)
+    ipc.on('begin-sleep', beginSleep)
 
     ipc.send('want-backend-state')
 }

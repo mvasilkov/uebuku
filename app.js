@@ -60,5 +60,9 @@ ipc.on('new-url', function (event, url, action) {
         }
 
         util.sendState(event.sender)
+
+        if (!slave.working) {
+            slave.work()
+        }
     })
 })
