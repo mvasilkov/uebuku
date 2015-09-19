@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset=utf8>
+        <title>Uebuku</title>
+        <link rel=stylesheet href=./basic.css>
+    </head>
+    <body>
+        <div id=add-url>
+            <form action=. id=add-url-form>
+                <div class=controls>
+                    <input type=url required id=new-url>
+                    <button type=submit>WAAAGH!</button>
+                </div>
+            </form>
+        </div>
+        <div id=backend-state></div>
+
+        <section id=backend-state-template>
+            <ul>
+                {{#each res.rows}}
+                <li>
+                    <span class=action>{{this.doc.action}}</span>
+                    <span class=url>{{this.doc.url}}</span>
+                </li>
+                {{/each}}
+            </ul>
+        </section>
+
+        <script src=./ui.js></script>
+    </body>
+</html>

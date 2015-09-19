@@ -1,0 +1,27 @@
+{
+  "name": "uebuku",
+  "version": "0.0.1",
+  "description": "Fear denies faith.",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mvasilkov/uebuku.git"
+  },
+  "author": "Rei Ayanami",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mvasilkov/uebuku/issues"
+  },
+  "homepage": "https://github.com/mvasilkov/uebuku",
+  "devDependencies": {
+    "electron-prebuilt": "^0.33.0",
+    "electron-rebuild": "^1.0.0"
+  },
+  "dependencies": {
+    "handlebars": "^4.0.2",
+    "jquery": "^2.1.4",
+    "mkdirp": "^0.5.1",
+    "objectid-js": "^1.0.2-patch1",
+    "pouchdb": "^4.0.3"
+  }
+}

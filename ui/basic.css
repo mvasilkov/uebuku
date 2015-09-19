@@ -1,0 +1,7 @@
+section[id$=-template] {
+    display: none
+}
+
+input[type=url]:invalid {
+    color: #FF0355
+}
