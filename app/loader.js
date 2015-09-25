@@ -1,6 +1,7 @@
 var assert = require('assert')
 var _path = require('path')
 var _request = require('request')
+var weak = require('weak')
 
 var backend = require('./backend.js')
 var save = require('./save.js')
@@ -57,8 +58,11 @@ Loader.prototype.work = function () {
 
         assert(doc.action in handlers)
 
+        var options = {dir: this.dir, doc: doc}
+        options.loader = weak(this)
+
         var handler = handlers[doc.action]
-        .handler({dir: this.dir, doc: doc}, this.resolve, this.reject)
+        .handler(options, this.resolve, this.reject)
 
         request(doc.url, handler)
     }.bind(this))
